@@ -1,0 +1,4 @@
+/* 隐藏导航栏菜单项的下拉箭头 */
+#nav .menus_items .site-page.has-dropdown::after {
+    display: none !important;
+}
