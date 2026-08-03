@@ -9,3 +9,31 @@
   background-attachment: fixed !important; /* 核心属性：让背景固定，不随滚动条移动 */
   background-position: center !important;
 }
+
+#post {
+    /* 1. 宽度调整 */
+    /* 修复了之前的拼写错误 (widht -> width) */
+    max-width: 12000px !important; /* 建议不要超过屏幕宽度的80%，否则阅读体验不好 */
+    width: 90% !important;        /* 在小屏幕上保持边距 */
+
+    /* 2. 透明度与背景调整 */
+    /* 0.85 代表 85% 的不透明度，看起来是纯白偏透，没有模糊感 */
+    background: rgba(255, 255, 255, 0.85) !important;
+
+    /* 3. 彻底移除毛玻璃效果 */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    /* 4. 保持圆角和间距 */
+    border-radius: 16px !important;
+    padding: 50px !important;
+    margin: 30px auto !important;
+}
+
+.note {
+    border-radius: 12px !important;
+    /* 不强制覆盖 background，只增加一点通透感 */
+    /* 利用 mix-blend-mode 或者降低不透明度来融合背景 */
+    opacity: 0.85 !important; /* 整体稍微透明一点点 */
+}
+
