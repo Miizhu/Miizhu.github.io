@@ -2,3 +2,10 @@
 #nav .menus_items .site-page.has-dropdown::after {
     display: none !important;
 }
+
+#web_bg {
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important; /* 核心属性：让背景固定，不随滚动条移动 */
+  background-position: center !important;
+}
