@@ -37,3 +37,16 @@
     opacity: 0.85 !important; /* 整体稍微透明一点点 */
 }
 
+/* 文章正文默认字号 */
+#article-container {
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+/* 移动端字号 */
+@media screen and (max-width: 768px) {
+  #article-container {
+    font-size: 16px;
+    line-height: 1.75;
+  }
+}
