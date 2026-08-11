@@ -75,11 +75,98 @@
 /* 为手机和减少动画模式保留静态背景 */
   #web_bg {
     background:
-      url("/images/mainpage.jpg")
+      url("https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/mainpage.jpg")
       center / cover no-repeat fixed !important;
   }
 
   body::before {
     display: none;
+  }
+}
+
+
+/* 使用居中排版和舒适行高，用于统一欢迎信息各行的字体大小、间距与基础颜色。 */
+.visitor-welcome {
+  padding: 6px 2px 10px;
+  color: #555;
+  font-size: 17px;
+  line-height: 1.9;
+  text-align: center;
+}
+
+/* 使用红色粗体标题和下边距，用于突出“欢迎信息”并与正文建立视觉层级。 */
+.visitor-title {
+  margin-bottom: 7px;
+  color: #ff3030;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+/* 使用块级行间距，用于让地点、问候语和当地时间保持整齐的分行布局。 */
+.visitor-line {
+  margin: 2px 0;
+}
+
+/* 使用蓝色、半粗体和等宽数字特性，用于突出地点与时间并减少秒数变化时的文字抖动。 */
+.visitor-highlight {
+  color: #49a6f2;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 使用较深正文颜色，用于让根据时段生成的欢迎语成为卡片中的主要阅读内容。 */
+.visitor-greeting {
+  color: #555;
+}
+
+/* 使用顶部间距和中等字重，用于在卡片底部形成简洁稳定的结束语。 */
+.visitor-ending {
+  margin-top: 3px;
+  color: #555;
+  font-weight: 500;
+}
+
+/* 使用分隔线和较小字号，用于区分动态欢迎信息与原有博客公告说明。 */
+.announcement-description {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(73, 166, 242, 0.2);
+  color: #666;
+  font-size: 14px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* 使用 Butterfly 深色主题选择器调整卡片和文字颜色，用于保证夜间模式下的对比度与可读性。 */
+
+[data-theme="dark"] .visitor-welcome,
+[data-theme="dark"] .visitor-greeting,
+[data-theme="dark"] .visitor-ending {
+  color: #ddd;
+}
+
+[data-theme="dark"] .visitor-highlight {
+  color: #75bdff;
+}
+
+[data-theme="dark"] .announcement-description {
+  border-top-color: rgba(117, 189, 255, 0.22);
+  color: #bbb;
+}
+
+/* 使用响应式媒体查询缩小字号和内边距，用于避免欢迎信息在手机端发生横向溢出。 */
+@media screen and (max-width: 768px) {
+  .visitor-welcome {
+    padding-inline: 0;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .visitor-title {
+    font-size: 19px;
+  }
+
+  .announcement-description {
+    font-size: 13px;
   }
 }
