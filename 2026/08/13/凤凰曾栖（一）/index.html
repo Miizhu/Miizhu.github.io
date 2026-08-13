@@ -1,0 +1,752 @@
+<!DOCTYPE html><html class="hide-aside" lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>凤凰曾栖（一） | Miizhu的博客</title><meta name="author" content="Miizhu,Miizhu@126.com"><meta name="copyright" content="Miizhu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="简读 本篇介绍了Godot游戏开发从配置静态人物图像，人物移动，地图碰撞箱设置，遮挡层设置的方法。 立项 终于开始开发自己的第一款游戏，这次是借助梧桐故里这个校友平台寻找合作伙伴，目标是开发一款以惠州中学生活为背景的游戏 综合考量游戏制作目的，玩家游玩乐趣和我个人的游戏喜好，最终确认开发一款2D像素风探索类游戏，类似于星露谷和宝可梦初几代的画风。 技术栈 游戏引擎：Godot 4.7 编程语言：G">
+<meta property="og:type" content="article">
+<meta property="og:title" content="凤凰曾栖（一）">
+<meta property="og:url" content="https://miizhu.github.io/2026/08/13/%E5%87%A4%E5%87%B0%E6%9B%BE%E6%A0%96%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="Miizhu的博客">
+<meta property="og:description" content="简读 本篇介绍了Godot游戏开发从配置静态人物图像，人物移动，地图碰撞箱设置，遮挡层设置的方法。 立项 终于开始开发自己的第一款游戏，这次是借助梧桐故里这个校友平台寻找合作伙伴，目标是开发一款以惠州中学生活为背景的游戏 综合考量游戏制作目的，玩家游玩乐趣和我个人的游戏喜好，最终确认开发一款2D像素风探索类游戏，类似于星露谷和宝可梦初几代的画风。 技术栈 游戏引擎：Godot 4.7 编程语言：G">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/user.jpg">
+<meta property="article:published_time" content="2026-08-13T10:29:00.000Z">
+<meta property="article:modified_time" content="2026-08-13T15:18:25.371Z">
+<meta property="article:author" content="Miizhu">
+<meta property="article:tag" content="chatgpt">
+<meta property="article:tag" content="vibecoding">
+<meta property="article:tag" content="游戏开发">
+<meta property="article:tag" content="经验分享">
+<meta property="article:tag" content="编程笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/user.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "凤凰曾栖（一）",
+  "url": "https://miizhu.github.io/2026/08/13/%E5%87%A4%E5%87%B0%E6%9B%BE%E6%A0%96%EF%BC%88%E4%B8%80%EF%BC%89/",
+  "image": "https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/user.jpg",
+  "datePublished": "2026-08-13T10:29:00.000Z",
+  "dateModified": "2026-08-13T15:18:25.371Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Miizhu",
+      "url": "https://Miizhu.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://miizhu.github.io/2026/08/13/%E5%87%A4%E5%87%B0%E6%9B%BE%E6%A0%96%EF%BC%88%E4%B8%80%EF%BC%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.clarity.ms"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.14/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>(function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "xwghtl4582");
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":true,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":true,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '凤凰曾栖（一）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/user.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/thanks/"><i class="fa-fw fas fa-heart"></i><span> 鸣谢</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fas fa-comment"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/friendlinks/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background: transparent;"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/logo.png" alt="Logo"><span class="site-name">Miizhu的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">凤凰曾栖（一）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/thanks/"><i class="fa-fw fas fa-heart"></i><span> 鸣谢</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw fas fa-comment"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/friendlinks/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">凤凰曾栖（一）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-13T10:29:00.000Z" title="发表于 2026-08-13 18:29:00">2026-08-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-13T15:18:25.371Z" title="更新于 2026-08-13 23:18:25">2026-08-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B8%B8%E6%88%8F/">游戏</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1>简读</h1>
+<p>本篇介绍了Godot游戏开发从配置静态人物图像，人物移动，地图碰撞箱设置，遮挡层设置的方法。</p>
+<h1>立项</h1>
+<p>终于开始开发自己的第一款游戏，这次是借助梧桐故里这个校友平台寻找合作伙伴，目标是开发一款以惠州中学生活为背景的游戏<br>
+综合考量游戏制作目的，玩家游玩乐趣和我个人的游戏喜好，最终确认开发一款2D像素风探索类游戏，类似于星露谷和宝可梦初几代的画风。</p>
+<h1>技术栈</h1>
+<div class="note blue no-icon flat"><p><strong>游戏引擎</strong>：Godot 4.7<br>
+<strong>编程语言</strong>：GDScript<br>
+<strong>渲染方式</strong>: Mobile Renderer</p>
+</div>
+<h1>人物搭建</h1>
+<h2 id="人物主体">人物主体</h2>
+<p>这里我们先拿到素材，导入到Godot的项目文件夹里</p>
+<blockquote>
+<ol>
+<li>新建一个CharacterBody2D的场景，命名为Character</li>
+<li>在这个根节点下建立AnimatedSprite2D 人物动画，CollisionShape2D 人物碰撞箱，Camera2D 人物相机(也就是玩家玩游戏时看到的窗口)</li>
+<li>点击AnimatedSprite2D节点，在应用窗口下方找到动画。选择添加动画，依次配置各个方向的动画。如果你的图跟我一样也是精灵表，只需要在点击添加动画后点击从精灵表中添加帧即可。</li>
+<li>注意，如果添加时显示的横线把人物切断，可以调整分割的格数<br>
+<img src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/player_idle_4dir_56px.png" alt="01我用来跑逻辑的精灵图" title="4向图"><br>
+<img src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/fhcq01_2.jpg" alt="02操作示意图" title="如何配置人物动画"><br>
+下一步我们来设置碰撞箱：<br>
+点击CollisionShape2D节点，在右侧检查器中找到shape，选择rectangle，将框调整到人物的脚部</li>
+</ol>
+</blockquote>
+<h2 id="人物行走逻辑">人物行走逻辑</h2>
+<p>搭建好人物主体后，很显然我们需要让他走起来。<br>
+现在我们先配置按键输入，让代码能够监控到我们的行动</p>
+<blockquote>
+<ol>
+<li>点击项目–&gt;项目设置，选择项目设置弹窗上方的输入映射</li>
+<li>在添加新动作处输入名字，点击添加</li>
+<li>点击添加好的动作右侧的加号添加事件<br>
+<img src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/fhcq01_3.png" alt="03完成操作后应该显示" title="最终配置页面示意图"><br>
+我们点击节点Character,再在节点树上方找到附加脚本,什么都不用改直接创建就可以。<br>
+接下来把以下代码复制进脚本</li>
+</ol>
+</blockquote>
+<pre class="line-numbers language-gdscript" data-language="gdscript"><code class="language-gdscript"><span class="token comment"># 玩家角色移动脚本</span>
+<span class="token keyword">extends</span> <span class="token class-name">CharacterBody2D</span>
+<span class="token comment"># 人物移动速度，可在检查器中调整</span>
+@<span class="token keyword">export</span> <span class="token keyword">var</span> speed<span class="token punctuation">:</span> <span class="token class-name">float</span> <span class="token operator">=</span> <span class="token number">150.0</span>
+<span class="token comment"># 获取角色的 AnimatedSprite2D 子节点</span>
+@<span class="token keyword">onready</span> <span class="token keyword">var</span> sprite<span class="token punctuation">:</span> <span class="token class-name">AnimatedSprite2D</span> <span class="token operator">=</span> <span class="token variable">$AnimatedSprite2D</span>
+<span class="token comment"># 记录人物最后面对的方向</span>
+<span class="token comment"># 游戏开始时默认朝右</span>
+<span class="token keyword">var</span> facing_direction<span class="token punctuation">:</span> <span class="token class-name">String</span> <span class="token operator">=</span> <span class="token string">"right"</span>
+<span class="token comment"># 每个物理帧执行一次</span>
+<span class="token keyword">func</span> <span class="token function">_physics_process</span><span class="token punctuation">(</span>_delta<span class="token punctuation">:</span> <span class="token class-name">float</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">void</span><span class="token punctuation">:</span>
+	<span class="token comment"># 读取四方向输入</span>
+	<span class="token comment"># 同时按两个不冲突的方向键时，</span>
+	<span class="token comment"># Input.get_vector 会自动生成斜向移动：</span>
+	<span class="token comment"># W + A：左上</span>
+	<span class="token comment"># W + D：右上</span>
+	<span class="token comment"># S + A：左下</span>
+	<span class="token comment"># S + D：右下</span>
+	<span class="token keyword">var</span> direction <span class="token operator">:=</span> Input<span class="token punctuation">.</span><span class="token function">get_vector</span><span class="token punctuation">(</span>
+	    <span class="token string">"move_left"</span><span class="token punctuation">,</span>
+	    <span class="token string">"move_right"</span><span class="token punctuation">,</span>
+	    <span class="token string">"move_up"</span><span class="token punctuation">,</span>
+	    <span class="token string">"move_down"</span>
+	<span class="token punctuation">)</span>
+	<span class="token comment"># 根据输入方向计算人物速度</span>
+	<span class="token comment"># 斜向速度会被自动标准化，不会比直线移动更快</span>
+	velocity <span class="token operator">=</span> direction <span class="token operator">*</span> speed
+
+	<span class="token comment"># 只有人物正在移动时才更新朝向</span>
+	<span class="token comment"># 停止移动后保留最后一次朝向</span>
+	<span class="token keyword">if</span> direction <span class="token operator">!=</span> Vector2<span class="token punctuation">.</span><span class="token constant">ZERO</span><span class="token punctuation">:</span>
+	    facing_direction <span class="token operator">=</span> <span class="token function">get_direction_name</span><span class="token punctuation">(</span>direction<span class="token punctuation">)</span>
+
+		<span class="token comment"># 测试阶段只播放对应方向的单帧 idle 动画</span>
+		<span class="token comment"># 例如：</span>
+		<span class="token comment"># facing_direction = "down_right"</span>
+		<span class="token comment"># 最终播放 idle_down_right</span>
+		sprite<span class="token punctuation">.</span><span class="token function">play</span><span class="token punctuation">(</span><span class="token string">"idle_"</span> <span class="token operator">+</span> facing_direction<span class="token punctuation">)</span>
+
+	<span class="token comment"># 让 CharacterBody2D 移动并处理碰撞</span>
+	<span class="token function">move_and_slide</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+
+    <span class="token comment"># 将移动方向转换成对应的动画方向名称</span>
+<span class="token keyword">func</span> <span class="token function">get_direction_name</span><span class="token punctuation">(</span>direction<span class="token punctuation">:</span> <span class="token class-name">Vector2</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">String</span><span class="token punctuation">:</span>
+	<span class="token comment"># 右</span>
+	<span class="token keyword">elif</span> direction<span class="token punctuation">.</span>x <span class="token operator">></span> <span class="token number">0.0</span><span class="token punctuation">:</span>
+	    <span class="token keyword">return</span> <span class="token string">"right"</span>
+
+	<span class="token comment"># 左</span>
+	<span class="token keyword">elif</span> direction<span class="token punctuation">.</span>x <span class="token operator">&lt;</span> <span class="token number">0.0</span><span class="token punctuation">:</span>
+	    <span class="token keyword">return</span> <span class="token string">"left"</span>
+
+	<span class="token comment"># 下</span>
+	<span class="token keyword">elif</span> direction<span class="token punctuation">.</span>y <span class="token operator">></span> <span class="token number">0.0</span><span class="token punctuation">:</span>
+	    <span class="token keyword">return</span> <span class="token string">"down"</span>
+
+	 <span class="token comment"># 上</span>
+	<span class="token keyword">else</span><span class="token punctuation">:</span>
+	    <span class="token keyword">return</span> <span class="token string">"up"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>完成后可以运行测试一下。</p>
+<h1>地图场景搭建</h1>
+<h2 id="地图素材获取">地图素材获取</h2>
+<p>使用chatgpt进行生图，分为两步:</p>
+<blockquote>
+<ol>
+<li>将想要的图片需求发给chatgpt，声明自己是小白，让它通过追问，直到确定自己明确需求为止，协助自己写出表达清晰的提示词</li>
+<li>将上述提示词复制，粘贴给另一个聊天框，生图</li>
+</ol>
+</blockquote>
+<div class="note red no-icon flat"><p>需要注意的是，如果图片不满意，不要直接在生图窗口指挥怎么修改，因为你的描述不一定足够准确，应重新发回给澄清需求的gpt，精确提示词后再发回给生图ai。</p>
+</div>
+<p>我在这里先确定了人物大小，精灵图高度为64px，人物高度为56px，然后生成地图，以便生成正确的地图大小，否则相对关系很可能会畸变。</p>
+<h2 id="地图逻辑实现-碰撞箱，遮挡关系">地图逻辑实现(碰撞箱，遮挡关系)</h2>
+<h3 id="将地图放进游戏">将地图放进游戏</h3>
+<ol>
+<li>首先创建一个类型为Node2D的节点作为根节点</li>
+<li>然后在根节点下建立一个Sprit2D结点作为背景节点，修改名字为Background(遵守用名规范可以防止忘记这个的作用)</li>
+<li>将素材拖进项目文件夹，再从左下角找到素材，拖进刚才新建的Sprit2D节点的检查器中的texture里，赋予纹路，让背景能显示出来<br>
+<img src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/Fhcq01_1.png" alt="02Spirit2D的检查器示意图" title="Spirit2D的检查器示意图"></li>
+</ol>
+<h3 id="碰撞箱配置">碰撞箱配置</h3>
+<p>当这个场景里没有物件需要复现时，可以使用整体配置的简便方法</p>
+<blockquote>
+<ol>
+<li>在根节点下创建StacticBody2D节点，命名为MapCollision</li>
+<li>在MapCollision节点下，创建一个CollisionShape2D节点，在检查器中选择Shape形式，自己画碰撞框。可选的样式有很多，如RectangleShape2D长方形,CircleShape2D圆形等</li>
+<li>重复此步骤，直到配置完所有碰撞箱</li>
+</ol>
+</blockquote>
+<h3 id="遮挡层">遮挡层</h3>
+<p>单独扣出需要遮挡层的图片，新建Sprit2D节点，将图片放入texture后移回原位。在检查器调整Background，Character和你需要的遮挡层的图片的order，Z index参数数字越大，图层越高<br>
+如果有一个物体是有可能被人物遮挡，也有可能遮挡人物，就需要在地图根场景中的脚本中加入以下代码（这里是Bookcase）</p>
+<pre class="line-numbers language-gdscript" data-language="gdscript"><code class="language-gdscript"><span class="token keyword">extends</span> <span class="token class-name">Node2D</span>
+@<span class="token keyword">onready</span> <span class="token keyword">var</span> character<span class="token punctuation">:</span> <span class="token class-name">CharacterBody2D</span> <span class="token operator">=</span> <span class="token variable">$Character</span>
+@<span class="token keyword">onready</span> <span class="token keyword">var</span> bookcase<span class="token punctuation">:</span> <span class="token class-name">Sprite2D</span> <span class="token operator">=</span> <span class="token variable">$BookcaseForeground</span>
+@<span class="token keyword">export</span> <span class="token keyword">var</span> bookcase_sort_y <span class="token operator">:=</span> <span class="token number">180.0</span>
+
+<span class="token keyword">func</span> <span class="token function">_process</span><span class="token punctuation">(</span>_delta<span class="token punctuation">:</span> <span class="token class-name">float</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">void</span><span class="token punctuation">:</span>
+    <span class="token comment"># 计算人物脚底坐标</span>
+    <span class="token comment"># character.global_position.y是角色中心点的y坐标</span>
+ <span class="token keyword">var</span> character_feet_y <span class="token operator">:=</span> character<span class="token punctuation">.</span>global_position<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token number">20.0</span>
+
+ <span class="token keyword">if</span> character_feet_y <span class="token operator">></span> bookcase_sort_y<span class="token punctuation">:</span>
+  <span class="token comment"># 人物位于书架下方，人物遮挡书架</span>
+  bookcase<span class="token punctuation">.</span>z_index <span class="token operator">=</span> <span class="token number">0</span>
+ <span class="token keyword">else</span><span class="token punctuation">:</span>
+  <span class="token comment"># 人物位于书架上方，书架遮挡人物</span>
+  bookcase<span class="token punctuation">.</span>z_index <span class="token operator">=</span> <span class="token number">2</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>到这里，一个人物能够移动，并拥有合理碰撞箱的场景就完成了。<br>
+我也初步完成角色移动逻辑，游戏地图逻辑的跑通。<br>
+小开香槟！</p>
+<h1>结语</h1>
+<p>其实实际上大部分操作都是GPT指引我完成的。虽然它现在已经可以直接修改文件，编写脚本，但我觉得还是自己学一学会更稳妥，所以我让GPT以教学的形式引导我。这个项目也算是个vibecoding的产物吧！<br>
+本篇是博主在完成这些功能后的一个复盘，旨在复习知识与分享流程，欢迎大家指出错漏！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://Miizhu.github.io">Miizhu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://miizhu.github.io/2026/08/13/%E5%87%A4%E5%87%B0%E6%9B%BE%E6%A0%96%EF%BC%88%E4%B8%80%EF%BC%89/">https://miizhu.github.io/2026/08/13/%E5%87%A4%E5%87%B0%E6%9B%BE%E6%A0%96%EF%BC%88%E4%B8%80%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://Miizhu.github.io" target="_blank">Miizhu的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/vibecoding/">vibecoding</a><a class="post-meta__tags" href="/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/">经验分享</a><a class="post-meta__tags" href="/tags/chatgpt/">chatgpt</a><a class="post-meta__tags" href="/tags/%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/">编程笔记</a><a class="post-meta__tags" href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/">游戏开发</a></div><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/user.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>投喂</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/08/06/ChatGPT1/" title="ChatGPT(一)"><img class="cover" src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/chatgpt-logo.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">ChatGPT(一)</div></div><div class="info-2"><div class="info-item-1">尝试起源 最初是一个学长极力推荐我去尝试下vibecoding，使用chatGPT进行编程，可以体验一下这个AI时代给程序员行业带来的变化，因为前段时间没空就一直搁置没有去尝试，最近有时间，我去试了试，简直惊为天人。 用最直白的话说，体验之后，我对大部分程序员即将失业这个预言的信任度加深了不少。  个人体验 我一上手，使用chatgpt先给我生成了一套模板，让我能更清晰地用提示词去命令codex写代码。先尝试做了一个记账的小demo，编程加测试的时间大概是5min不到，就生成了一个符合我要求，页面美观简洁的记账软件。点击此处下载 虽然说这只是一个小demo，很简单，所有的数据都保存在本地，但是如果要我手打实现这么一个网站，我估计我至少需要学习1-2个月的相关知识。也就是说，AI已经能够让一个完全不懂编程的人实现自己的想法，创意或许才是下一个时代的主流。 但我们真的不需要再学习计算机相关知识吗？这一点我保留疑惑，AI并不一定是完全对的，完全不去看代码里面的东西，而是只看AI给出的成品，应该是一定会出现问题的。 别的不多说了，等我以后有点经验之后再来跟大家聊聊，今天跟大家分享一下ch...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/08/06/ChatGPT1/" title="ChatGPT(一)"><img class="cover" src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/chatgpt-logo.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-06</div><div class="info-item-2">ChatGPT(一)</div></div><div class="info-2"><div class="info-item-1">尝试起源 最初是一个学长极力推荐我去尝试下vibecoding，使用chatGPT进行编程，可以体验一下这个AI时代给程序员行业带来的变化，因为前段时间没空就一直搁置没有去尝试，最近有时间，我去试了试，简直惊为天人。 用最直白的话说，体验之后，我对大部分程序员即将失业这个预言的信任度加深了不少。  个人体验 我一上手，使用chatgpt先给我生成了一套模板，让我能更清晰地用提示词去命令codex写代码。先尝试做了一个记账的小demo，编程加测试的时间大概是5min不到，就生成了一个符合我要求，页面美观简洁的记账软件。点击此处下载 虽然说这只是一个小demo，很简单，所有的数据都保存在本地，但是如果要我手打实现这么一个网站，我估计我至少需要学习1-2个月的相关知识。也就是说，AI已经能够让一个完全不懂编程的人实现自己的想法，创意或许才是下一个时代的主流。 但我们真的不需要再学习计算机相关知识吗？这一点我保留疑惑，AI并不一定是完全对的，完全不去看代码里面的东西，而是只看AI给出的成品，应该是一定会出现问题的。 别的不多说了，等我以后有点经验之后再来跟大家聊聊，今天跟大家分享一下ch...</div></div></div></a><a class="pagination-related" href="/2026/08/02/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/" title="第一篇博客"><img class="cover" src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/01passage.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-02</div><div class="info-item-2">第一篇博客</div></div><div class="info-2"><div class="info-item-1">搭建博客所使用的工具  总体框架：Hexo 参考视频：bu明標記 Hexo主题：Butterfly 图床：picgo 参考视频：Falling_Sakura 壁纸获取软件下载   关于为什么要搭建这个博客 其实很早以前，大概是初三的时候，我就看过一个视频是up主展示自己个人网站，上面有一些个人技能与作品集展示，当时给我带来了极大震撼，恰逢当时跟老师学习用flask搭建网站，认为搭建起这样一个网站实在是太难太难。但是，这是一件很酷的事情不是吗？ 所以当我进入华南农业大学多代同堂的数信QQ群，在群文件里翻出了大佬学长**@Link**的博客时，了解到搭建一个个人博客也许并不难，一股热血从心头燃起，立刻投入到做一个自己的博客当中。在构建我这个博客时，风格与页面布局有参考Link学长的博客，因为我感觉Link学长的页面十分符合我的审美，不过我以后一定会走出自己的风格的！ 我想将创建这个博客作为我编程学习的起点里程碑，这标志着我正式踏入了我所热爱与向往的计算机行业。我以后会在这个博客更新有关我学习C++，vibecoding，unity,ue等的学习笔记，既是与各位分享，也算是对自己的一个...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/user.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Miizhu</div><div class="author-info-description">一个始终走在路上的青年</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Miizhu"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content"><div id="visitor-welcome" class="visitor-welcome">
+  <div class="visitor-title">🎉 <span>欢迎信息</span> 🎉</div>
+  <div class="visitor-loading">正在获取访客信息...</div>
+</div> <div class="announcement-description">
+  这里会持续更新我的学习笔记以及游戏解析<br>
+  欢迎所有人进行友好讨论，也期待大家给出高屋建瓴的意见
+</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">简读</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">立项</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">技术栈</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">人物搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%BA%E7%89%A9%E4%B8%BB%E4%BD%93"><span class="toc-number">4.1.</span> <span class="toc-text">人物主体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%BA%E7%89%A9%E8%A1%8C%E8%B5%B0%E9%80%BB%E8%BE%91"><span class="toc-number">4.2.</span> <span class="toc-text">人物行走逻辑</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">地图场景搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%B0%E5%9B%BE%E7%B4%A0%E6%9D%90%E8%8E%B7%E5%8F%96"><span class="toc-number">5.1.</span> <span class="toc-text">地图素材获取</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%B0%E5%9B%BE%E9%80%BB%E8%BE%91%E5%AE%9E%E7%8E%B0-%E7%A2%B0%E6%92%9E%E7%AE%B1%EF%BC%8C%E9%81%AE%E6%8C%A1%E5%85%B3%E7%B3%BB"><span class="toc-number">5.2.</span> <span class="toc-text">地图逻辑实现(碰撞箱，遮挡关系)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E5%9C%B0%E5%9B%BE%E6%94%BE%E8%BF%9B%E6%B8%B8%E6%88%8F"><span class="toc-number">5.2.1.</span> <span class="toc-text">将地图放进游戏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A2%B0%E6%92%9E%E7%AE%B1%E9%85%8D%E7%BD%AE"><span class="toc-number">5.2.2.</span> <span class="toc-text">碰撞箱配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%AE%E6%8C%A1%E5%B1%82"><span class="toc-number">5.2.3.</span> <span class="toc-text">遮挡层</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">结语</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/13/%E5%87%A4%E5%87%B0%E6%9B%BE%E6%A0%96%EF%BC%88%E4%B8%80%EF%BC%89/" title="凤凰曾栖（一）">凤凰曾栖（一）</a><time datetime="2026-08-13T10:29:00.000Z" title="发表于 2026-08-13 18:29:00">2026-08-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/06/ChatGPT1/" title="ChatGPT(一)"><img src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/chatgpt-logo.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ChatGPT(一)"/></a><div class="content"><a class="title" href="/2026/08/06/ChatGPT1/" title="ChatGPT(一)">ChatGPT(一)</a><time datetime="2026-08-06T15:36:38.000Z" title="发表于 2026-08-06 23:36:38">2026-08-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/02/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/" title="第一篇博客"><img src="https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/01passage.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第一篇博客"/></a><div class="content"><a class="title" href="/2026/08/02/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/" title="第一篇博客">第一篇博客</a><time datetime="2026-08-02T12:48:19.000Z" title="发表于 2026-08-02 20:48:19">2026-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2026 By Miizhu</span></div><div class="footer_custom_text">welcome to my blog!<br>本站已运行 <span id="site-runtime" role="timer">正在计算...</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.6.1"></script><script src="/js/main.js?v=5.6.1"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.14/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const parseViewBox = viewBox => {
+    if (!viewBox) return null
+    const parts = viewBox.trim().split(/[\s,]+/).map(n => Number(n))
+    if (parts.length !== 4 || parts.some(n => Number.isNaN(n))) return null
+    return parts
+  }
+
+  const getSvgViewBox = svg => {
+    const attr = parseViewBox(svg.getAttribute('viewBox'))
+    if (attr) return attr
+
+    // Fallback: use bbox to build a viewBox
+    try {
+      const bbox = svg.getBBox()
+      if (bbox && bbox.width && bbox.height) return [bbox.x, bbox.y, bbox.width, bbox.height]
+    } catch (e) {
+      // getBBox may fail on some edge cases; ignore
+    }
+
+    const w = Number(svg.getAttribute('width')) || 0
+    const h = Number(svg.getAttribute('height')) || 0
+    if (w > 0 && h > 0) return [0, 0, w, h]
+    return [0, 0, 100, 100]
+  }
+
+  const setSvgViewBox = (svg, vb) => {
+    svg.setAttribute('viewBox', `${vb[0]} ${vb[1]} ${vb[2]} ${vb[3]}`)
+  }
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+  const openSvgInNewTab = ({ source, initViewBox }) => {
+    const getClonedSvg = () => {
+      if (typeof source === 'string') {
+        const template = document.createElement('template')
+        template.innerHTML = source.trim()
+        const svg = template.content.querySelector('svg')
+        return svg ? svg.cloneNode(true) : null
+      }
+      if (source && typeof source.cloneNode === 'function') {
+        return source.cloneNode(true)
+      }
+      return null
+    }
+
+    const clone = getClonedSvg()
+    if (!clone) return
+    if (initViewBox && initViewBox.length === 4) {
+      clone.setAttribute('viewBox', initViewBox.join(' '))
+    }
+    if (!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    if (!clone.getAttribute('xmlns:xlink') && clone.innerHTML.includes('xlink:')) {
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    }
+    // inject background to match current theme
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+    const bg = getComputedStyle(document.body).backgroundColor || (isDark ? '#1e1e1e' : '#ffffff')
+    if (!clone.style.background) clone.style.background = bg
+
+    const serializer = new XMLSerializer()
+    const svgSource = serializer.serializeToString(clone)
+    const htmlSource = `<!doctype html><html><head><meta charset="utf-8" />
+      <style>
+        html, body { width: 100%; height: 100%; margin: 0; display: flex; align-items: center; justify-content: center; background: ${bg}; }
+        svg { max-width: 100%; max-height: 100%; height: auto; width: auto; }
+      </style>
+      </head><body>${svgSource}</body></html>`
+    const blob = new Blob([htmlSource], { type: 'text/html;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank', 'noopener')
+
+    setTimeout(() => URL.revokeObjectURL(url), 5000)
+  }
+
+  const attachMermaidViewerButton = wrap => {
+    let btn = wrap.querySelector('.mermaid-open-btn')
+    if (!btn) {
+      btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'mermaid-open-btn'
+      wrap.appendChild(btn)
+    }
+
+    btn.innerHTML = '<i class="fa fa-search fa-fw" aria-hidden="true"></i>'
+
+    if (!btn.__mermaidViewerBound) {
+      btn.addEventListener('click', e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const svg = wrap.__mermaidOriginalSvg || wrap.querySelector('svg')
+        if (!svg) return
+        const initViewBox = wrap.__mermaidInitViewBox
+        openSvgInNewTab({ source: svg, initViewBox })
+      })
+      btn.__mermaidViewerBound = true
+    }
+  }
+
+  // Zoom around a point (px, py) in the SVG viewport (in viewBox coordinates)
+  const zoomAtPoint = (vb, factor, px, py) => {
+    const w = vb[2] * factor
+    const h = vb[3] * factor
+    const nx = px - (px - vb[0]) * factor
+    const ny = py - (py - vb[1]) * factor
+    return [nx, ny, w, h]
+  }
+
+  const initMermaidGestures = wrap => {
+    // Clean up previous event listeners and pending frames
+    if (wrap.__mermaidAbortController) {
+      wrap.__mermaidAbortController.abort()
+      if (wrap.__mermaidRafId) cancelAnimationFrame(wrap.__mermaidRafId)
+    }
+    const ac = new AbortController()
+    wrap.__mermaidAbortController = ac
+    const svg = wrap.querySelector('svg')
+    if (!svg) return
+
+    // Ensure viewBox exists so gestures always work
+    const initVb = getSvgViewBox(svg)
+    wrap.__mermaidInitViewBox = initVb
+    wrap.__mermaidCurViewBox = initVb.slice()
+    setSvgViewBox(svg, initVb)
+    // Disable default gestures to prevent scroll chaining and pinch-zoom penetration in Chrome
+    svg.style.touchAction = 'none'
+
+    // Cache BoundingClientRect, throttled on scroll to reduce reflow
+    let cachedRect = svg.getBoundingClientRect()
+    let rectDirty = false
+    const markRectDirty = () => { rectDirty = true }
+    window.addEventListener('resize', markRectDirty, { signal: ac.signal })
+    window.addEventListener('scroll', markRectDirty, { signal: ac.signal, capture: true })
+    const getRect = () => {
+      if (rectDirty) {
+        cachedRect = svg.getBoundingClientRect()
+        rectDirty = false
+      }
+      return cachedRect
+    }
+
+    // Precompute clamp bounds from initial viewBox
+    const minW = initVb[2] * 0.1
+    const maxW = initVb[2] * 10
+    const minH = initVb[3] * 0.1
+    const maxH = initVb[3] * 10
+    const clampVb = vb => {
+      const out = vb.slice()
+      out[2] = clamp(out[2], minW, maxW)
+      out[3] = clamp(out[3], minH, maxH)
+      return out
+    }
+
+    // Throttle DOM updates using requestAnimationFrame
+    let pendingVb = null
+    let rafId = null
+    const applyVb = () => {
+      if (pendingVb) {
+        wrap.__mermaidCurViewBox = pendingVb
+        setSvgViewBox(svg, pendingVb)
+        pendingVb = null
+      }
+      rafId = null
+      wrap.__mermaidRafId = null
+    }
+    const setCurVb = vb => {
+      pendingVb = clampVb(vb)
+      if (!rafId) {
+        rafId = requestAnimationFrame(applyVb)
+        wrap.__mermaidRafId = rafId
+      }
+    }
+
+    const state = {
+      pointers: new Map(),
+      startVb: null,
+      startDist: 0,
+      lastPointerX: 0,
+      lastPointerY: 0
+    }
+
+    const onPointerDown = e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      svg.setPointerCapture(e.pointerId)
+      const curVb = wrap.__mermaidCurViewBox
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      if (state.pointers.size === 1) {
+        state.startVb = curVb.slice()
+        state.lastPointerX = e.clientX
+        state.lastPointerY = e.clientY
+      } else if (state.pointers.size === 2) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        state.startDist = Math.hypot(dx, dy)
+        state.startVb = curVb.slice()
+      }
+    }
+
+    const onPointerMove = e => {
+      if (!state.pointers.has(e.pointerId)) return
+      state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      if (state.pointers.size === 1 && state.startVb) {
+        const p = state.pointers.values().next().value
+        const dxClient = p.x - state.lastPointerX
+        const dyClient = p.y - state.lastPointerY
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+        const dx = dxClient * (curVb[2] / rect.width)
+        const dy = dyClient * (curVb[3] / rect.height)
+        setCurVb([curVb[0] - dx, curVb[1] - dy, curVb[2], curVb[3]])
+        return
+      }
+      if (state.pointers.size === 2 && state.startVb && state.startDist > 0) {
+        const pts = [...state.pointers.values()]
+        const dx = pts[0].x - pts[1].x
+        const dy = pts[0].y - pts[1].y
+        const dist = Math.hypot(dx, dy)
+        if (!dist) return
+        const factor = state.startDist / dist
+        const cx = (pts[0].x + pts[1].x) / 2
+        const cy = (pts[0].y + pts[1].y) / 2
+        const px = curVb[0] + (cx - rect.left) * (curVb[2] / rect.width)
+        const py = curVb[1] + (cy - rect.top) * (curVb[3] / rect.height)
+        setCurVb(zoomAtPoint(state.startVb, factor, px, py))
+      }
+    }
+
+    const onPointerUpOrCancel = e => {
+      // Release PointerCapture to avoid event capture anomalies
+      if (svg.hasPointerCapture && svg.hasPointerCapture(e.pointerId)) {
+        svg.releasePointerCapture(e.pointerId)
+      }
+      state.pointers.delete(e.pointerId)
+      if (state.pointers.size === 0) {
+        state.startVb = null
+        state.startDist = 0
+      } else if (state.pointers.size === 1) {
+        const p = state.pointers.values().next().value
+        state.lastPointerX = p.x
+        state.lastPointerY = p.y
+      }
+    }
+
+    const onWheel = e => {
+      // Prevent event bubbling from triggering external scroll
+      e.preventDefault()
+      e.stopPropagation()
+      // Normalize deltaY across deltaMode (Chrome uses pixels, Safari uses lines)
+      let delta = e.deltaY
+      if (e.deltaMode === 1) delta *= 16
+      else if (e.deltaMode === 2) delta *= 400
+
+      // Continuous zoom factor: smoother than fixed 1.1/0.9 steps
+      const zoomFactor = Math.pow(1.001, delta)
+
+      const curVb = wrap.__mermaidCurViewBox
+      const rect = getRect()
+      const px = curVb[0] + (e.clientX - rect.left) * (curVb[2] / rect.width)
+      const py = curVb[1] + (e.clientY - rect.top) * (curVb[3] / rect.height)
+      setCurVb(zoomAtPoint(curVb, zoomFactor, px, py))
+    }
+
+    const onDblClick = () => {
+      const init = wrap.__mermaidInitViewBox
+      if (init) setCurVb(init)
+    }
+
+    svg.addEventListener('pointerdown', onPointerDown, { signal: ac.signal })
+    svg.addEventListener('pointermove', onPointerMove, { signal: ac.signal })
+    svg.addEventListener('pointerup', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('pointercancel', onPointerUpOrCancel, { signal: ac.signal })
+    svg.addEventListener('wheel', onWheel, { passive: false, signal: ac.signal })
+    svg.addEventListener('dblclick', onDblClick, { signal: ac.signal })
+  }
+
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      // Clean up event listeners before removing old SVG
+      if (item.__mermaidAbortController) {
+        item.__mermaidAbortController.abort()
+      }
+      const oldSvg = item.querySelector('svg')
+      if (oldSvg) oldSvg.remove()
+      let config = {}
+      try {
+        config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      } catch (e) {
+        console.warn('[mermaid] failed to parse dataset.config:', e)
+      }
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+        if (true) initMermaidGestures(item)
+        item.__mermaidOriginalSvg = svg
+        if (true) attachMermaidViewerButton(item)
+      }
+
+      const handleError = err => {
+        console.error(`[mermaid] render failed for block #${index}:`, err)
+        const errorEl = document.createElement('div')
+        errorEl.className = 'mermaid-error'
+        errorEl.textContent = `Mermaid render error: ${err.message || err}`
+        mermaidSrc.insertAdjacentElement('afterend', errorEl)
+      }
+
+      try {
+        const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+        // mermaid v9 and v10 compatibility
+        if (typeof renderFn === 'string') {
+          renderMermaid(renderFn)
+        } else {
+          renderFn.then(({ svg }) => renderMermaid(svg)).catch(handleError)
+        }
+      } catch (err) {
+        handleError(err)
+      }
+    })
+  }
+
+  const codeToMermaid = $article => {
+    const codeMermaidEle = $article.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    const $article = document.getElementById('article-container')
+    if (!$article) return
+
+    if (true) codeToMermaid($article)
+    const $mermaid = $article.querySelectorAll('.mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid@11.16.0/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><video id="video-background" autoplay muted loop playsinline preload="metadata" poster=https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/mainpage.jpg><source src=https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/background.mp4 type="video/mp4"></video><script src="/js/site-runtime.js" defer></script><script src="/js/welcome.js" defer></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/click-show-text.min.js" data-mobile="false" data-text="谦卑,仁爱,耐心,勤勉,慷慨,节制,贞洁,爱国,敬业,诚信,友善" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="今天想看什么？" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.6.1"></script></div></div></body></html>
