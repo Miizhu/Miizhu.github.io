@@ -105,7 +105,7 @@ footer_img: transparent
 # Website Background
 # Can set it to color, image URL or an array containing colors and/or image URLs
 # If an array is provided, a random background will be selected from the array on each load
-background: https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/mainpage.jpg
+background: 
 
 cover:
   # Disable the cover or not
@@ -284,7 +284,7 @@ footer:
   copyright:
     enable: false
     version: false
-  custom_text: welcome to my blog!
+  custom_text: welcome to my blog!<br>本站已运行 <span id="site-runtime" role="timer">正在计算...</span>
 
 # --------------------------------------
 # Aside Settings
@@ -312,7 +312,16 @@ aside:
       link: https://github.com/Miizhu
   card_announcement:
     enable: true
-    content: 欢迎来到秘烛的博客！<br>这里会持续更新我的学习笔记以及游戏解析<br>欢迎所有人进行友好讨论，也期待大家给出高屋建瓴的意见
+    # 使用语义化 HTML 容器承载动态欢迎信息，用于让 JavaScript 分行填充地点、问候语和当地时间。
+    content: >-
+      <div id="visitor-welcome" class="visitor-welcome">
+        <div class="visitor-title">🎉 <span>欢迎信息</span> 🎉</div>
+        <div class="visitor-loading">正在获取访客信息...</div>
+      </div>
+      <div class="announcement-description">
+        这里会持续更新我的学习笔记以及游戏解析<br>
+        欢迎所有人进行友好讨论，也期待大家给出高屋建瓴的意见
+      </div>
   card_recent_post:
     enable: true
     # If set 0 will show all
@@ -1097,7 +1106,16 @@ inject:
     - <link rel="stylesheet" href="/css/custom.css">
 
   bottom:
+    - <video id="video-background" autoplay muted loop playsinline preload="metadata" poster=https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/mainpage.jpg><source src=https://cdn.jsdelivr.net/gh/Miizhu/picgo@main/images/background.mp4 type="video/mp4"></video>
+    - <script src="/js/site-runtime.js" defer></script>
+    - <script src="/js/welcome.js" defer></script>
     # - <script src="xxxx"></script>
+    # autoplay：自动播放
+    # muted：静音；没有它，浏览器通常会阻止自动播放
+    # loop：循环播放
+    # playsinline：手机端不强制全屏
+    # poster：视频加载前显示静态图片
+    # preload="metadata"：避免页面一打开就阻塞加载全部视频
 
 # CDN Settings
 # Don't modify the following settings unless you know how they work
